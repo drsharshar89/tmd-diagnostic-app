@@ -1,0 +1,14 @@
+{
+  "install": "npm install",
+  "start": "npm run build",
+  "terminals": [
+    {
+      "name": "Development Server",
+      "command": "npm run dev"
+    },
+    {
+      "name": "Preview Server",
+      "command": "npm run preview"
+    }
+  ]
+}
