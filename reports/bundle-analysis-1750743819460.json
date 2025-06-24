@@ -1,0 +1,150 @@
+{
+  "timestamp": "2025-06-24T05:43:39.460Z",
+  "summary": {
+    "totalSize": 59056,
+    "totalFiles": 17,
+    "javascriptFiles": 6,
+    "assetFiles": 11
+  },
+  "files": [
+    {
+      "path": "assets\\index-c58afded.css",
+      "size": 16792,
+      "type": ".css",
+      "category": "stylesheet"
+    },
+    {
+      "path": "assets\\js\\index-bc71dedf.js",
+      "size": 704,
+      "type": ".js",
+      "category": "javascript"
+    },
+    {
+      "path": "assets\\js\\performance-4ed993c7.js",
+      "size": 1,
+      "type": ".js",
+      "category": "javascript"
+    },
+    {
+      "path": "assets\\js\\react-vendor-4ed993c7.js",
+      "size": 1,
+      "type": ".js",
+      "category": "vendor"
+    },
+    {
+      "path": "assets\\js\\utils-4ed993c7.js",
+      "size": 1,
+      "type": ".js",
+      "category": "javascript"
+    },
+    {
+      "path": "assets\\js\\vendor-4ed993c7.js",
+      "size": 1,
+      "type": ".js",
+      "category": "vendor"
+    },
+    {
+      "path": "favicon-16x16.png",
+      "size": 17,
+      "type": ".png",
+      "category": "image"
+    },
+    {
+      "path": "favicon-32x32.png",
+      "size": 17,
+      "type": ".png",
+      "category": "image"
+    },
+    {
+      "path": "favicon.ico",
+      "size": 17,
+      "type": ".ico",
+      "category": "image"
+    },
+    {
+      "path": "icon-144x144.png",
+      "size": 97,
+      "type": ".png",
+      "category": "image"
+    },
+    {
+      "path": "index.html",
+      "size": 6391,
+      "type": ".html",
+      "category": "html"
+    },
+    {
+      "path": "manifest.json",
+      "size": 2079,
+      "type": ".json",
+      "category": "config"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "size": 301,
+      "type": ".webmanifest",
+      "category": "config"
+    },
+    {
+      "path": "offline.html",
+      "size": 9182,
+      "type": ".html",
+      "category": "html"
+    },
+    {
+      "path": "registerSW.js",
+      "size": 134,
+      "type": ".js",
+      "category": "javascript"
+    },
+    {
+      "path": "sw.js",
+      "size": 1969,
+      "type": ".js",
+      "category": "javascript"
+    },
+    {
+      "path": "workbox-74f2ef77.js",
+      "size": 21352,
+      "type": ".js",
+      "category": "javascript"
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "info",
+      "title": "Medical Application Performance",
+      "description": "Additional optimizations for healthcare applications",
+      "actions": [
+        "Implement service worker for offline functionality",
+        "Add performance monitoring for diagnostic accuracy",
+        "Use compression for patient data transmission",
+        "Implement progressive enhancement for accessibility",
+        "Add performance budgets to CI/CD pipeline"
+      ]
+    }
+  ],
+  "performanceBudget": {
+    "budget": {
+      "total": 512000,
+      "javascript": 307200,
+      "assets": 204800
+    },
+    "actual": {
+      "total": 59056,
+      "javascript": 24163,
+      "assets": 19320
+    },
+    "usage": {
+      "total": 11.534374999999999,
+      "javascript": 7.865559895833334,
+      "assets": 9.43359375
+    }
+  },
+  "thresholds": {
+    "maxBundleSize": 512000,
+    "maxChunkSize": 256000,
+    "maxAssetSize": 102400,
+    "compressionRatio": 0.3
+  }
+}

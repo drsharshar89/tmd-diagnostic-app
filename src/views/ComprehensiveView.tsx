@@ -2,16 +2,98 @@ import React, { useState, useCallback, useMemo, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Language, getTranslation } from '../i18n';
-import { ComprehensiveAnswers, AssessmentViewProps } from '../types';
+import { ComprehensiveAnswers } from '../types';
 import { validateComprehensiveAssessment } from '../utils';
 
-interface ComprehensiveViewProps extends AssessmentViewProps {
+interface ComprehensiveViewProps {
+  lang: Language;
   onComplete: (answers: ComprehensiveAnswers) => void;
 }
 
 type ExtendedAnswers = {
   readonly [key: string]: boolean | number | string | null;
 };
+
+// =====================================================
+// MEMOIZED SUB-COMPONENTS FOR PERFORMANCE
+// =====================================================
+
+const QuestionCategory = memo(({ category }: { category: string }) => (
+  <div className="question-category">
+    <h3>{category}</h3>
+  </div>
+));
+QuestionCategory.displayName = 'QuestionCategory';
+
+const ProgressIndicator = memo(({ current, total }: { current: number; total: number }) => {
+  const progressPercentage = useMemo(() => ((current + 1) / total) * 100, [current, total]);
+
+  return (
+    <div className="progress-container">
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${progressPercentage}%` }}
+          role="progressbar"
+          aria-valuenow={progressPercentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
+      </div>
+      <span className="progress-text">
+        Question {current + 1} of {total}
+      </span>
+    </div>
+  );
+});
+ProgressIndicator.displayName = 'ProgressIndicator';
+
+const NavigationButtons = memo(
+  ({
+    currentQuestion,
+    totalQuestions,
+    onPrevious,
+    onNext,
+    canProceed,
+  }: {
+    currentQuestion: number;
+    totalQuestions: number;
+    onPrevious: () => void;
+    onNext: () => void;
+    canProceed: boolean;
+  }) => (
+    <div className="navigation-buttons">
+      <button
+        type="button"
+        onClick={onPrevious}
+        disabled={currentQuestion === 0}
+        className="btn btn-secondary"
+        aria-label="Previous question"
+      >
+        <ChevronLeft size={20} />
+        Previous
+      </button>
+
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={!canProceed}
+        className="btn btn-primary"
+        aria-label={
+          currentQuestion === totalQuestions - 1 ? 'Complete assessment' : 'Next question'
+        }
+      >
+        {currentQuestion === totalQuestions - 1 ? 'Complete' : 'Next'}
+        {currentQuestion < totalQuestions - 1 && <ChevronRight size={20} />}
+      </button>
+    </div>
+  )
+);
+NavigationButtons.displayName = 'NavigationButtons';
+
+// =====================================================
+// MAIN COMPONENT
+// =====================================================
 
 const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComplete }) => {
   const navigate = useNavigate();
@@ -56,181 +138,206 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
     q26: null, // Daytime clenching
   });
 
-  const questions = [
-    // Pain Assessment (Q1-Q7)
-    {
-      text: 'Do you have pain in your jaw, temple, in the ear, or in front of the ear on either side at rest?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'Do you have pain when you open your mouth wide?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'Do you have pain when chewing food or gum?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'Do you have pain in your temples?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'Do you have pain in or around your ears?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'Do you wake up with a stiff or sore jaw in the morning?',
-      type: 'yesno',
-      category: 'Pain Assessment',
-    },
-    {
-      text: 'On a scale of 0-10, what is your average jaw pain level over the past week? (0 = no pain, 10 = worst pain imaginable)',
-      type: 'scale',
-      category: 'Pain Assessment',
-    },
+  // Memoized questions array to prevent recreation on every render
+  const questions = useMemo(
+    () => [
+      // Pain Assessment (Q1-Q7)
+      {
+        text: 'Do you have pain in your jaw, temple, in the ear, or in front of the ear on either side at rest?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'Do you have pain when you open your mouth wide?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'Do you have pain when chewing food or gum?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'Do you have pain in your temples?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'Do you have pain in or around your ears?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'Do you wake up with a stiff or sore jaw in the morning?',
+        type: 'yesno',
+        category: 'Pain Assessment',
+      },
+      {
+        text: 'On a scale of 0-10, what is your average jaw pain level over the past week? (0 = no pain, 10 = worst pain imaginable)',
+        type: 'scale',
+        category: 'Pain Assessment',
+      },
 
-    // Joint Sounds (Q8-Q11)
-    {
-      text: 'Does your jaw make clicking sounds when you open or close your mouth?',
-      type: 'yesno',
-      category: 'Joint Sounds',
-    },
-    {
-      text: 'Does your jaw make popping sounds when you open or close your mouth?',
-      type: 'yesno',
-      category: 'Joint Sounds',
-    },
-    {
-      text: 'Does your jaw make grinding or grating sounds when you move it?',
-      type: 'yesno',
-      category: 'Joint Sounds',
-    },
-    {
-      text: 'If you hear sounds, are they on the right side, left side, or both sides?',
-      type: 'choice',
-      options: ['Right side', 'Left side', 'Both sides', 'No sounds'],
-      category: 'Joint Sounds',
-    },
+      // Joint Sounds (Q8-Q11)
+      {
+        text: 'Does your jaw make clicking sounds when you open or close your mouth?',
+        type: 'yesno',
+        category: 'Joint Sounds',
+      },
+      {
+        text: 'Does your jaw make popping sounds when you open or close your mouth?',
+        type: 'yesno',
+        category: 'Joint Sounds',
+      },
+      {
+        text: 'Does your jaw make grinding or grating sounds when you move it?',
+        type: 'yesno',
+        category: 'Joint Sounds',
+      },
+      {
+        text: 'If you hear sounds, are they on the right side, left side, or both sides?',
+        type: 'choice',
+        options: ['Right side', 'Left side', 'Both sides', 'No sounds'],
+        category: 'Joint Sounds',
+      },
 
-    // Jaw Function (Q12-Q17)
-    {
-      text: 'Do you have difficulty opening your mouth wide?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
-    {
-      text: 'Has your jaw ever locked in the closed position?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
-    {
-      text: 'Has your jaw ever locked in the open position?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
-    {
-      text: 'Does your jaw deviate (move to one side) when you open your mouth?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
-    {
-      text: 'Do you have difficulty chewing hard or tough foods?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
-    {
-      text: 'Do your jaw muscles get tired easily when chewing?',
-      type: 'yesno',
-      category: 'Jaw Function',
-    },
+      // Jaw Function (Q12-Q17)
+      {
+        text: 'Do you have difficulty opening your mouth wide?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
+      {
+        text: 'Has your jaw ever locked in the closed position?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
+      {
+        text: 'Has your jaw ever locked in the open position?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
+      {
+        text: 'Does your jaw deviate (move to one side) when you open your mouth?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
+      {
+        text: 'Do you have difficulty chewing hard or tough foods?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
+      {
+        text: 'Do your jaw muscles get tired easily when chewing?',
+        type: 'yesno',
+        category: 'Jaw Function',
+      },
 
-    // Associated Symptoms (Q18-Q21)
-    {
-      text: 'Do you frequently have headaches?',
-      type: 'yesno',
-      category: 'Associated Symptoms',
-    },
-    {
-      text: 'Do you have neck pain or stiffness?',
-      type: 'yesno',
-      category: 'Associated Symptoms',
-    },
-    {
-      text: 'Do you have ringing in your ears (tinnitus)?',
-      type: 'yesno',
-      category: 'Associated Symptoms',
-    },
-    {
-      text: 'Do you experience dizziness or balance problems?',
-      type: 'yesno',
-      category: 'Associated Symptoms',
-    },
+      // Associated Symptoms (Q18-Q21)
+      {
+        text: 'Do you frequently have headaches?',
+        type: 'yesno',
+        category: 'Associated Symptoms',
+      },
+      {
+        text: 'Do you have neck pain or stiffness?',
+        type: 'yesno',
+        category: 'Associated Symptoms',
+      },
+      {
+        text: 'Do you have ringing in your ears (tinnitus)?',
+        type: 'yesno',
+        category: 'Associated Symptoms',
+      },
+      {
+        text: 'Do you experience dizziness or balance problems?',
+        type: 'yesno',
+        category: 'Associated Symptoms',
+      },
 
-    // History and Triggers (Q22-Q26)
-    {
-      text: 'Have you had recent dental work or oral surgery?',
-      type: 'yesno',
-      category: 'History & Triggers',
-    },
-    {
-      text: 'Have you had any injury or trauma to your jaw, face, or head?',
-      type: 'yesno',
-      category: 'History & Triggers',
-    },
-    {
-      text: 'How would you rate your current stress level? (1 = very low, 10 = very high)',
-      type: 'scale',
-      category: 'History & Triggers',
-    },
-    {
-      text: 'Do you grind or clench your teeth while sleeping?',
-      type: 'choice',
-      options: ['Yes, definitely', 'I think so', "I don't think so", 'No, definitely not'],
-      category: 'History & Triggers',
-    },
-    {
-      text: 'Do you clench your teeth during the day when concentrating or stressed?',
-      type: 'yesno',
-      category: 'History & Triggers',
-    },
-  ];
+      // History and Triggers (Q22-Q26)
+      {
+        text: 'Have you had recent dental work or oral surgery?',
+        type: 'yesno',
+        category: 'History & Triggers',
+      },
+      {
+        text: 'Have you had any injury or trauma to your jaw, face, or head?',
+        type: 'yesno',
+        category: 'History & Triggers',
+      },
+      {
+        text: 'How would you rate your current stress level? (1 = very low, 10 = very high)',
+        type: 'scale',
+        category: 'History & Triggers',
+      },
+      {
+        text: 'Do you grind or clench your teeth while sleeping?',
+        type: 'choice',
+        options: ['Yes, definitely', 'I think so', "I don't think so", 'No, definitely not'],
+        category: 'History & Triggers',
+      },
+      {
+        text: 'Do you clench your teeth during the day when concentrating or stressed?',
+        type: 'yesno',
+        category: 'History & Triggers',
+      },
+    ],
+    []
+  );
 
-  const handleAnswer = useCallback(
-    (answer: boolean | number | string | null): void => {
+  // Memoized current question data
+  const currentQuestionData = useMemo(
+    () => questions[currentQuestion],
+    [questions, currentQuestion]
+  );
+
+  // Memoized current answer
+  const currentAnswer = useMemo(() => {
+    const questionKey = `q${currentQuestion + 1}` as keyof ComprehensiveAnswers;
+    return answers[questionKey];
+  }, [answers, currentQuestion]);
+
+  // Memoized validation check
+  const canProceed = useMemo(() => {
+    return currentAnswer !== null && currentAnswer !== undefined;
+  }, [currentAnswer]);
+
+  // Memoized completion validation
+  const isComplete = useMemo(() => {
+    return validateComprehensiveAssessment(answers);
+  }, [answers]);
+
+  // Stable callback references
+  const handleAnswerChange = useCallback(
+    (value: boolean | number | string) => {
       const questionKey = `q${currentQuestion + 1}` as keyof ComprehensiveAnswers;
-      setAnswers((prev) => ({ ...prev, [questionKey]: answer }));
+      setAnswers((prev) => ({
+        ...prev,
+        [questionKey]: value,
+      }));
     },
     [currentQuestion]
   );
 
-  const handleNext = useCallback((): void => {
+  const handleNext = useCallback(() => {
     if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      if (validateComprehensiveAssessment(answers)) {
-        onComplete(answers);
-        navigate('/results');
-      } else {
-        throw new Error('Validation failed: Please answer all questions before submitting');
-      }
+      setCurrentQuestion((prev) => prev + 1);
+    } else if (isComplete) {
+      onComplete(answers);
+      navigate('/results');
     }
-  }, [currentQuestion, questions.length, answers, onComplete, navigate]);
+  }, [currentQuestion, questions.length, isComplete, answers, onComplete, navigate]);
 
-  const handleBack = useCallback((): void => {
+  const handlePrevious = useCallback(() => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    } else {
-      navigate('/');
+      setCurrentQuestion((prev) => prev - 1);
     }
-  }, [currentQuestion, navigate]);
+  }, [currentQuestion]);
 
-  const currentAnswer = answers[`q${currentQuestion + 1}` as keyof ComprehensiveAnswers];
-  const currentQuestionData = questions[currentQuestion];
+  const handleBack = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
 
   const renderAnswerOptions = () => {
     switch (currentQuestionData.type) {
@@ -239,13 +346,13 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
           <div className="answer-buttons">
             <button
               className={`answer-button yes-button ${currentAnswer === true ? 'selected' : ''}`}
-              onClick={() => handleAnswer(true)}
+              onClick={() => handleAnswerChange(true)}
             >
               {t.yes}
             </button>
             <button
               className={`answer-button no-button ${currentAnswer === false ? 'selected' : ''}`}
-              onClick={() => handleAnswer(false)}
+              onClick={() => handleAnswerChange(false)}
             >
               {t.no}
             </button>
@@ -260,7 +367,7 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
                 <button
                   key={num}
                   className={`scale-button ${currentAnswer === num ? 'selected' : ''}`}
-                  onClick={() => handleAnswer(num)}
+                  onClick={() => handleAnswerChange(num)}
                   style={{
                     margin: '2px',
                     padding: '8px 12px',
@@ -298,7 +405,7 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
               <button
                 key={index}
                 className={`choice-button ${currentAnswer === option ? 'selected' : ''}`}
-                onClick={() => handleAnswer(option)}
+                onClick={() => handleAnswerChange(option)}
                 style={{
                   display: 'block',
                   width: '100%',

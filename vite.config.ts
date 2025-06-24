@@ -12,6 +12,19 @@ export default defineConfig({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         maximumFileSizeToCacheInBytes: 3000000,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
+        ],
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
@@ -82,7 +95,7 @@ export default defineConfig({
     },
   },
 
-  // Build configuration
+  // Enhanced Build configuration for performance
   build: {
     target: 'esnext',
     outDir: 'dist',
@@ -94,20 +107,54 @@ export default defineConfig({
         drop_console: process.env.NODE_ENV === 'production',
         drop_debugger: true,
         pure_funcs: ['console.log', 'console.info'],
+        passes: 2,
       },
       format: {
         comments: false,
       },
+      mangle: {
+        safari10: true,
+      },
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['lucide-react'],
-          utils: ['dompurify'],
+        manualChunks: (id) => {
+          // Vendor libraries
+          if (id.includes('node_modules')) {
+            // React ecosystem
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            // Router
+            if (id.includes('react-router')) {
+              return 'router';
+            }
+            // UI libraries
+            if (id.includes('lucide-react')) {
+              return 'ui';
+            }
+            // Utility libraries
+            if (id.includes('dompurify') || id.includes('canvas-confetti')) {
+              return 'utils';
+            }
+            // Three.js (heavy 3D library)
+            if (id.includes('three')) {
+              return 'three';
+            }
+            // Web vitals
+            if (id.includes('web-vitals')) {
+              return 'performance';
+            }
+            // Other vendor libraries
+            return 'vendor';
+          }
+
+          // Don't split application code into separate chunks for now
+          // since the app is already very small and splitting creates overhead
+          return undefined;
         },
         assetFileNames: (assetInfo) => {
+          if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
           const info = assetInfo.name.split('.');
           const ext = info[info.length - 1];
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
@@ -120,15 +167,28 @@ export default defineConfig({
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
       },
+      treeshake: {
+        moduleSideEffects: false,
+        propertyReadSideEffects: false,
+        unknownGlobalSideEffects: false,
+      },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 800,
     reportCompressedSize: true,
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096,
   },
 
-  // Optimization
+  // Enhanced Optimization
   optimizeDeps: {
     include: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'dompurify'],
     exclude: ['@vite/client', '@vite/env'],
+    esbuildOptions: {
+      target: 'esnext',
+      supported: {
+        'top-level-await': true,
+      },
+    },
   },
 
   // CSS configuration
@@ -136,6 +196,10 @@ export default defineConfig({
     devSourcemap: true,
     postcss: {
       plugins: [],
+    },
+    modules: {
+      localsConvention: 'camelCase',
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
     },
   },
 
@@ -147,4 +211,10 @@ export default defineConfig({
 
   // Clear screen
   clearScreen: false,
+
+  // Enhanced performance settings
+  esbuild: {
+    target: 'esnext',
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+  },
 });

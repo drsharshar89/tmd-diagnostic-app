@@ -1,11 +1,7 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState, useEffect, useCallback, memo, Suspense } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import ErrorBoundary from './shared/ui/organisms/ErrorBoundary';
 import ThemeAndLangToggle from './components/ThemeAndLangToggle';
-import HomeView from './views/HomeView';
-import QuickAssessmentView from './views/QuickAssessmentView';
-import ComprehensiveView from './views/ComprehensiveView';
-import ResultView from './views/ResultView';
 import { Language } from './i18n';
 import {
   QuickAssessmentAnswers,
@@ -15,6 +11,65 @@ import {
 } from './shared/types';
 import { getSystemTheme } from './shared/utils';
 import { securityService } from './services/SecurityService';
+
+// =====================================================
+// LAZY-LOADED COMPONENTS FOR CODE SPLITTING
+// =====================================================
+
+// Lazy load heavy views to reduce initial bundle size
+const HomeView = React.lazy(() => import('./views/HomeView'));
+const QuickAssessmentView = React.lazy(() => import('./views/QuickAssessmentView'));
+const ComprehensiveView = React.lazy(() => import('./views/ComprehensiveView'));
+const ResultView = React.lazy(() => import('./views/ResultView'));
+
+// =====================================================
+// LOADING COMPONENTS
+// =====================================================
+
+const RouteLoadingSpinner: React.FC = memo(() => (
+  <div
+    className="route-loading"
+    role="status"
+    aria-label="Loading page"
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '60vh',
+      padding: '2rem',
+    }}
+  >
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{
+          width: '40px',
+          height: '40px',
+          border: '3px solid #f3f3f3',
+          borderTop: '3px solid #007bff',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 1rem',
+        }}
+      />
+      <p>Loading...</p>
+    </div>
+    <style>
+      {`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}
+    </style>
+  </div>
+));
+
+RouteLoadingSpinner.displayName = 'RouteLoadingSpinner';
+
+// =====================================================
+// MAIN APP COMPONENT
+// =====================================================
 
 const App: React.FC = memo(() => {
   // Language state management
@@ -108,28 +163,30 @@ const App: React.FC = memo(() => {
         </header>
 
         <main className="main" role="main" id="main-content">
-          <Routes>
-            <Route path="/" element={<HomeView lang={lang} />} />
-            <Route
-              path="/quick-assessment"
-              element={<QuickAssessmentView lang={lang} onComplete={handleQuickComplete} />}
-            />
-            <Route
-              path="/comprehensive-assessment"
-              element={<ComprehensiveView lang={lang} onComplete={handleComprehensiveComplete} />}
-            />
-            <Route
-              path="/results"
-              element={
-                <ResultView
-                  lang={lang}
-                  assessmentType={assessmentType}
-                  quickAnswers={quickAnswers}
-                  comprehensiveAnswers={comprehensiveAnswers}
-                />
-              }
-            />
-          </Routes>
+          <Suspense fallback={<RouteLoadingSpinner />}>
+            <Routes>
+              <Route path="/" element={<HomeView lang={lang} />} />
+              <Route
+                path="/quick-assessment"
+                element={<QuickAssessmentView lang={lang} onComplete={handleQuickComplete} />}
+              />
+              <Route
+                path="/comprehensive-assessment"
+                element={<ComprehensiveView lang={lang} onComplete={handleComprehensiveComplete} />}
+              />
+              <Route
+                path="/results"
+                element={
+                  <ResultView
+                    lang={lang}
+                    assessmentType={assessmentType}
+                    quickAnswers={quickAnswers}
+                    comprehensiveAnswers={comprehensiveAnswers}
+                  />
+                }
+              />
+            </Routes>
+          </Suspense>
         </main>
 
         <footer className="footer" role="contentinfo">

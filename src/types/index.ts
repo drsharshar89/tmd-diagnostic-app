@@ -2,7 +2,14 @@ import { Language } from '../i18n';
 
 // Assessment Types
 export interface QuickAssessmentAnswers {
-  description: string;
+  q1: boolean | null; // Jaw pain or discomfort
+  q2: boolean | null; // Pain worsens with movement
+  q3: boolean | null; // Joint sounds
+  q4: boolean | null; // Jaw locking
+  q5: boolean | null; // Referred symptoms
+  q6: boolean | null; // History of trauma/dental work
+  q7: boolean | null; // Stiffness or fatigue
+  [key: string]: boolean | null; // For dynamic question handling
 }
 
 export interface ComprehensiveAnswers {

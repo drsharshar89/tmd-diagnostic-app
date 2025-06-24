@@ -4,6 +4,14 @@
     "formulahendry.auto-rename-tag",
     "christian-kohler.path-intellisense",
     "dbaeumer.vscode-eslint",
-    "sourcegraph.cody-ai"
+    "sourcegraph.cody-ai",
+    "reduckted.vscode-gitweblinks",
+    "bradlc.vscode-tailwindcss",
+    "tomi.xajssnippets",
+    "vitest.explorer",
+    "vscjava.vscode-java-test",
+    "aminer.codegeex",
+    "mikestead.dotenv",
+    "ms-vscode.vscode-typescript-next"
   ]
 }

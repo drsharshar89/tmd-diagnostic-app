@@ -6,6 +6,7 @@ export { ComprehensiveAssessmentView } from './components/ComprehensiveAssessmen
 export { HomeView } from './components/HomeView';
 export { useAssessment } from './hooks/useAssessment';
 export { useAssessmentValidation } from './hooks/useAssessmentValidation';
+export { useQuickAssessment } from './hooks/useQuickAssessment';
 
 // Types
 export type { QuickAssessmentAnswers, ComprehensiveAnswers, AssessmentType } from './types';

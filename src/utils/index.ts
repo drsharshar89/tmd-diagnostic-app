@@ -16,8 +16,69 @@ import {
 
 // Risk Calculation Utilities - Now using centralized Medical Protocol Engine
 export const calculateQuickAssessmentRisk = (answers: QuickAssessmentAnswers): AssessmentResult => {
-  // Use the centralized Medical Protocol Engine for consistent results
-  return processQuickAssessment(answers);
+  // Calculate score from boolean answers
+  let score = 0;
+  const weights = { q1: 2, q2: 2, q3: 1, q4: 3, q5: 1, q6: 1, q7: 1 };
+
+  Object.entries(answers).forEach(([key, value]) => {
+    if (value === true && key in weights) {
+      score += weights[key as keyof typeof weights];
+    }
+  });
+
+  // Determine risk level
+  let riskLevel: RiskLevel = 'low';
+  if (score >= 6) riskLevel = 'high';
+  else if (score >= 3) riskLevel = 'moderate';
+
+  // Generate recommendations based on risk level
+  const recommendations = getRiskRecommendations(riskLevel);
+
+  return {
+    riskLevel,
+    score,
+    maxScore: 11,
+    confidence: Math.min(0.95, 0.6 + (score / 11) * 0.35),
+    recommendations,
+    timestamp: new Date(),
+    assessmentType: 'quick',
+    answers,
+    requiresImmediateAttention: score >= 8 || (answers.q4 === true && answers.q1 === true),
+    followUpRecommended: riskLevel !== 'low',
+    specialistReferral: score >= 6,
+  };
+};
+
+// Helper function for risk-based recommendations
+const getRiskRecommendations = (riskLevel: RiskLevel): string[] => {
+  switch (riskLevel) {
+    case 'low':
+      return [
+        'Maintain good oral hygiene',
+        'Avoid excessive gum chewing',
+        'Practice stress management techniques',
+        'Monitor for any changes in symptoms',
+      ];
+    case 'moderate':
+      return [
+        'Apply warm compresses to jaw area',
+        'Eat soft foods and avoid hard/chewy items',
+        'Practice jaw relaxation exercises',
+        'Consider over-the-counter pain relief if needed',
+        'Schedule a dental consultation within 2-4 weeks',
+      ];
+    case 'high':
+      return [
+        'Schedule immediate dental/medical consultation',
+        'Avoid hard foods and excessive jaw movements',
+        'Apply ice packs for acute pain (15-20 minutes)',
+        'Consider temporary soft diet',
+        'Document symptoms and triggers',
+        'Avoid self-treatment beyond basic comfort measures',
+      ];
+    default:
+      return [];
+  }
 };
 
 export const calculateComprehensiveAssessmentRisk = (
@@ -175,7 +236,9 @@ export const getAssessmentByCode = async (code: string): Promise<StoredAssessmen
 
 // Validation Utilities
 export const validateQuickAssessment = (answers: QuickAssessmentAnswers): boolean => {
-  return answers.description.trim().length > 0;
+  // Check if at least one question has been answered
+  const hasAnswers = Object.values(answers).some((answer) => answer !== null);
+  return hasAnswers;
 };
 
 // Formatting Utilities

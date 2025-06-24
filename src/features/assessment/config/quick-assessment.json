@@ -1,0 +1,209 @@
+{
+  "assessment": {
+    "title": "TMD Quick Assessment",
+    "version": "1.0.0",
+    "description": "7-question TMD screening based on RDC/TMD clinical evidence",
+    "protocol": "RDC/TMD",
+    "questions": [
+      {
+        "id": "q1",
+        "text": "Have you experienced pain or discomfort in your jaw, temple, or face within the past month?",
+        "type": "yesno",
+        "tags": ["pain", "discomfort", "facial"],
+        "riskWeight": 2,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "diagnostic",
+          "evidenceLevel": "A"
+        },
+        "next": {
+          "yes": "q2",
+          "no": "q3"
+        }
+      },
+      {
+        "id": "q2",
+        "text": "Does this pain worsen when chewing, yawning, or opening your mouth wide?",
+        "type": "yesno",
+        "tags": ["pain", "movement", "functional"],
+        "riskWeight": 2,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "diagnostic",
+          "evidenceLevel": "A"
+        },
+        "next": {
+          "yes": "q3",
+          "no": "q3"
+        }
+      },
+      {
+        "id": "q3",
+        "text": "Do you hear clicking, popping, or grinding sounds when you move your jaw?",
+        "type": "yesno",
+        "tags": ["joint", "sounds", "clicking"],
+        "riskWeight": 1,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "diagnostic",
+          "evidenceLevel": "B"
+        },
+        "next": {
+          "yes": "q4",
+          "no": "q4"
+        }
+      },
+      {
+        "id": "q4",
+        "text": "Has your jaw ever locked or gotten stuck in an open or closed position?",
+        "type": "yesno",
+        "tags": ["joint", "locking", "mobility"],
+        "riskWeight": 3,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "diagnostic",
+          "evidenceLevel": "A"
+        },
+        "next": {
+          "yes": "q5",
+          "no": "q5"
+        }
+      },
+      {
+        "id": "q5",
+        "text": "Do you frequently experience headaches, neck pain, or ear pain?",
+        "type": "yesno",
+        "tags": ["referred", "headache", "neck", "ear"],
+        "riskWeight": 1,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "prognostic",
+          "evidenceLevel": "B"
+        },
+        "next": {
+          "yes": "q6",
+          "no": "q6"
+        }
+      },
+      {
+        "id": "q6",
+        "text": "Have you had any dental work, oral surgery, or facial trauma in the past year?",
+        "type": "yesno",
+        "tags": ["history", "trauma", "dental"],
+        "riskWeight": 1,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "prognostic",
+          "evidenceLevel": "C"
+        },
+        "next": {
+          "yes": "q7",
+          "no": "q7"
+        }
+      },
+      {
+        "id": "q7",
+        "text": "Do you experience jaw stiffness or fatigue, especially after meals or in the morning?",
+        "type": "yesno",
+        "tags": ["stiffness", "fatigue", "functional"],
+        "riskWeight": 1,
+        "required": true,
+        "medicalContext": {
+          "rdcTmdRelevance": "axis_i",
+          "clinicalSignificance": "therapeutic",
+          "evidenceLevel": "B"
+        },
+        "next": {
+          "yes": "result",
+          "no": "result"
+        }
+      }
+    ],
+    "resultLogic": {
+      "scoreRanges": [
+        {
+          "min": 0,
+          "max": 2,
+          "level": "low",
+          "label": "🟢 Low Risk",
+          "color": "#10B981",
+          "output": {
+            "title": "Low Risk for TMD",
+            "description": "Your responses suggest a low likelihood of TMD. Continue with good oral habits.",
+            "recommendations": [
+              "Maintain good oral hygiene",
+              "Avoid excessive gum chewing",
+              "Practice stress management techniques",
+              "Monitor for any changes in symptoms"
+            ],
+            "followUp": "Routine dental checkups are sufficient",
+            "urgency": "none"
+          }
+        },
+        {
+          "min": 3,
+          "max": 5,
+          "level": "moderate",
+          "label": "🟡 Moderate Risk",
+          "color": "#F59E0B",
+          "output": {
+            "title": "Moderate Risk for TMD",
+            "description": "Your responses indicate some TMD symptoms that warrant attention and monitoring.",
+            "recommendations": [
+              "Apply warm compresses to jaw area",
+              "Eat soft foods and avoid hard/chewy items",
+              "Practice jaw relaxation exercises",
+              "Consider over-the-counter pain relief if needed",
+              "Schedule a dental consultation within 2-4 weeks"
+            ],
+            "followUp": "Dental evaluation recommended within 2-4 weeks",
+            "urgency": "moderate"
+          }
+        },
+        {
+          "min": 6,
+          "max": 11,
+          "level": "high",
+          "label": "🔴 High Risk",
+          "color": "#EF4444",
+          "output": {
+            "title": "High Risk for TMD",
+            "description": "Your responses suggest significant TMD symptoms requiring professional evaluation.",
+            "recommendations": [
+              "Schedule immediate dental/medical consultation",
+              "Avoid hard foods and excessive jaw movements",
+              "Apply ice packs for acute pain (15-20 minutes)",
+              "Consider temporary soft diet",
+              "Document symptoms and triggers",
+              "Avoid self-treatment beyond basic comfort measures"
+            ],
+            "followUp": "Professional evaluation recommended within 1 week",
+            "urgency": "high",
+            "specialistReferral": true
+          }
+        }
+      ],
+      "medicalCodes": {
+        "low": [],
+        "moderate": ["K07.60"],
+        "high": ["K07.60", "K07.61", "M79.1"]
+      },
+      "flags": {
+        "immediateAttention": {
+          "condition": "score >= 8 || (q4 === 'yes' && q1 === 'yes')",
+          "message": "Severe symptoms detected - immediate professional evaluation recommended"
+        },
+        "specialistReferral": {
+          "condition": "score >= 6",
+          "message": "Consider referral to TMD specialist or oral surgeon"
+        }
+      }
+    }
+  }
+}
