@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Primary Meta Tags -->
+    <title>TMD Diagnostic Tool - Professional Medical Assessment</title>
+    <meta name="title" content="TMD Diagnostic Tool - Professional Medical Assessment" />
+    <meta
+      name="description"
+      content="Professional Temporomandibular Disorder (TMD) diagnostic tool with comprehensive medical assessment capabilities. Get accurate risk analysis and personalized recommendations."
+    />
+    <meta
+      name="keywords"
+      content="TMD, temporomandibular disorder, jaw pain, medical assessment, diagnostic tool, healthcare"
+    />
+    <meta name="author" content="TMD Diagnostic Team" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tmd-diagnostic.com/" />
+    <meta property="og:title" content="TMD Diagnostic Tool - Professional Medical Assessment" />
+    <meta
+      property="og:description"
+      content="Professional TMD diagnostic tool with comprehensive medical assessment capabilities."
+    />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://tmd-diagnostic.com/" />
+    <meta property="twitter:title" content="TMD Diagnostic Tool" />
+    <meta
+      property="twitter:description"
+      content="Professional TMD diagnostic tool with comprehensive medical assessment."
+    />
+    <meta property="twitter:image" content="/og-image.png" />
+
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#007bff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="TMD Diagnostic" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+
+    <!-- Performance & Security -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- Content Security Policy -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
+    />
+
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": "TMD Diagnostic Tool",
+        "description": "Professional Temporomandibular Disorder diagnostic tool",
+        "url": "https://tmd-diagnostic.com",
+        "medicalAudience": {
+          "@type": "MedicalAudience",
+          "audienceType": "Patient"
+        },
+        "specialty": {
+          "@type": "MedicalSpecialty",
+          "name": "Dentistry"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- No JavaScript fallback -->
+    <noscript>
+      <div
+        style="
+          padding: 20px;
+          text-align: center;
+          font-family:
+            system-ui,
+            -apple-system,
+            sans-serif;
+        "
+      >
+        <h1>JavaScript Required</h1>
+        <p>This application requires JavaScript to be enabled for proper functionality.</p>
+        <p>Please enable JavaScript in your browser settings and refresh the page.</p>
+      </div>
+    </noscript>
+
+    <!-- Loading indicator -->
+    <div
+      id="loading-indicator"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      "
+    >
+      <div style="text-align: center">
+        <div
+          style="
+            width: 50px;
+            height: 50px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          "
+        ></div>
+        <p
+          style="
+            margin-top: 16px;
+            font-family:
+              system-ui,
+              -apple-system,
+              sans-serif;
+            color: #666;
+          "
+        >
+          Loading TMD Diagnostic Tool...
+        </p>
+      </div>
+    </div>
+
+    <!-- Main app root -->
+    <div id="root"></div>
+
+    <!-- Module script -->
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Loading spinner animation -->
+    <style>
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Hide loading indicator when app loads */
+      #root:not(:empty) ~ #loading-indicator {
+        display: none !important;
+      }
+    </style>
+
+    <!-- Register Service Worker -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => console.log('ServiceWorker registered:', registration))
+            .catch((error) => console.error('ServiceWorker registration failed:', error));
+        });
+      }
+    </script>
+  </body>
+</html>

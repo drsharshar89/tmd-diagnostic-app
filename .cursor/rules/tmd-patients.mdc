@@ -1,0 +1,32 @@
+---
+description: 
+globs: **/*
+alwaysApply: false
+---
+# TMD Diagnostic Application - Project Rules
+
+You are working on a medical-grade TMD (Temporomandibular Disorder) diagnostic application. Follow these rules strictly for every interaction:
+
+## 🏗️ Architecture & Organization
+
+1. **File Structure**: Always use Feature-Sliced Design with domain-driven organization:
+   - `/features/` for feature modules
+   - `/entities/` for business logic
+   - `/shared/` for reusable components
+   - Each feature must have: components/, hooks/, types/, utils/, index.ts
+
+2. **Naming Conventions**:
+   - Components: PascalCase (e.g., `PainMapping.tsx`)
+   - Hooks: camelCase with 'use' prefix (e.g., `useAssessment.ts`)
+   - Utils: camelCase descriptive (e.g., `calculateDiagnosticScore.ts`)
+   - Types: PascalCase with 'I' or 'T' prefix for interfaces/types
+   - Files must match component names exactly
+
+3. **Import Order** (enforce with ESLint):
+   ```typescript
+   // 1. React
+   // 2. Third-party
+   // 3. Aliases (@/)
+   // 4. Relative
+
+   // 5. Styles

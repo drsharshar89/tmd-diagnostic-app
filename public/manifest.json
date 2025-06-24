@@ -1,0 +1,67 @@
+{
+  "name": "TMD Diagnostic Tool",
+  "short_name": "TMDTool",
+  "description": "Professional Temporomandibular Disorder (TMD) diagnostic tool with comprehensive medical assessment capabilities",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    { "src": "/favicon-16x16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "/favicon.ico", "sizes": "48x48 32x32 16x16", "type": "image/x-icon" }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Home screen with assessment options"
+    },
+    {
+      "src": "/screenshot-2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Comprehensive medical assessment"
+    },
+    {
+      "src": "/screenshot-3.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Professional diagnostic results"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quick Assessment",
+      "short_name": "Quick",
+      "description": "Start a quick TMD assessment",
+      "url": "/quick-assessment",
+      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Comprehensive Assessment",
+      "short_name": "Full",
+      "description": "Start a comprehensive medical assessment",
+      "url": "/comprehensive-assessment",
+      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "protocol_handlers": [],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
+  "display_override": ["window-controls-overlay", "minimal-ui"]
+}

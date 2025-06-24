@@ -1,0 +1,8 @@
+{
+  "livePreview.debugOnExternalPreview": true,
+  "livePreview.showServerStatusNotifications": true,
+  "livePreview.tasks.runTaskWithExternalPreview": true,
+  "path-intellisense.autoSlashAfterDirectory": true,
+  "path-intellisense.autoTriggerNextSuggestion": true,
+  "path-intellisense.extensionOnImport": true
+}

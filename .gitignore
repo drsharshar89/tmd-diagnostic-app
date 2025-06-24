@@ -1,0 +1,153 @@
+# 🛡️ TMD Diagnostic App - Security-First Git Ignore Rules
+# Following HIPAA compliance and security best practices
+
+# =====================================================
+# ENVIRONMENT & SECRETS (CRITICAL SECURITY)
+# =====================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets/
+config/local.json
+
+# =====================================================
+# DEPENDENCY FOLDERS
+# =====================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =====================================================
+# BUILD ARTIFACTS & DISTRIBUTION
+# =====================================================
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# =====================================================
+# LOGS & DEBUG FILES
+# =====================================================
+*.log
+logs/
+debug.log
+error.log
+combined.log
+access.log
+
+# =====================================================
+# MEDICAL DATA & PHI (HIPAA COMPLIANCE)
+# =====================================================
+*.phi
+patient-data/
+assessments/
+medical-records/
+encrypted-storage/
+audit-logs/
+backup-data/
+
+# =====================================================
+# DEVELOPMENT TOOLS
+# =====================================================
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Cursor AI configs (keep local only)
+.cursor-config.json
+cursor-agent.config.json
+
+# =====================================================
+# TESTING & COVERAGE
+# =====================================================
+coverage/
+.nyc_output/
+junit.xml
+test-results/
+playwright-report/
+test-results.xml
+
+# =====================================================
+# CACHE & TEMPORARY FILES
+# =====================================================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+.temp/
+tmp/
+
+# =====================================================
+# OS & SYSTEM FILES
+# =====================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =====================================================
+# SECURITY CERTIFICATES & KEYS
+# =====================================================
+*.p8
+*.mobileprovision
+*.cer
+*.der
+*.csr
+*.pub
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# =====================================================
+# DEPLOYMENT & PRODUCTION
+# =====================================================
+.vercel
+.netlify
+.firebase/
+firebase-debug.log
+.serverless/
+
+# =====================================================
+# EDITOR & IDE
+# =====================================================
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+
+# =====================================================
+# PACKAGE MANAGERS
+# =====================================================
+.pnpm-store/
+.yarn/
+.yarnrc.yml
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# =====================================================
+# MISCELLANEOUS
+# =====================================================
+*.tgz
+*.tar.gz
+.npm
+.eslintrc.local.js
+.prettierrc.local.js

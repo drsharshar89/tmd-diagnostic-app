@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TMD Assessment - Offline</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+      }
+
+      .offline-container {
+        background: white;
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 90%;
+      }
+
+      .offline-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 2rem;
+        background: #f8f9fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: #6c757d;
+      }
+
+      .offline-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #495057;
+      }
+
+      .offline-message {
+        font-size: 1.1rem;
+        color: #6c757d;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+
+      .offline-features {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        text-align: left;
+      }
+
+      .offline-features h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+      }
+
+      .offline-features ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .offline-features li {
+        padding: 0.5rem 0;
+        color: #6c757d;
+        position: relative;
+        padding-left: 1.5rem;
+      }
+
+      .offline-features li::before {
+        content: '✓';
+        color: #28a745;
+        font-weight: bold;
+        position: absolute;
+        left: 0;
+      }
+
+      .retry-button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+      }
+
+      .retry-button:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+      }
+
+      .cache-button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0.5rem;
+      }
+
+      .cache-button:hover {
+        background: #1e7e34;
+        transform: translateY(-1px);
+      }
+
+      .connection-status {
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin: 1rem 0;
+        font-weight: 500;
+      }
+
+      .connection-status.online {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .connection-status.offline {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .tips {
+        text-align: left;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #e9ecef;
+        border-radius: 6px;
+      }
+
+      .tips h4 {
+        color: #495057;
+        margin-bottom: 0.5rem;
+      }
+
+      .tips p {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 600px) {
+        .offline-container {
+          padding: 2rem;
+          margin: 1rem;
+        }
+
+        .offline-title {
+          font-size: 1.5rem;
+        }
+
+        .offline-message {
+          font-size: 1rem;
+        }
+      }
+
+      .pulse {
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-container">
+      <div class="offline-icon pulse">📴</div>
+
+      <h1 class="offline-title">You're Offline</h1>
+
+      <p class="offline-message">
+        Don't worry! The TMD Assessment app is designed to work offline. You can continue using many
+        features even without an internet connection.
+      </p>
+
+      <div id="connection-status" class="connection-status offline">
+        🔴 No internet connection detected
+      </div>
+
+      <div class="offline-features">
+        <h3>Available Offline Features:</h3>
+        <ul>
+          <li>Complete assessment questionnaires</li>
+          <li>View previously saved results</li>
+          <li>Access help and information pages</li>
+          <li>Use the pain intensity calculator</li>
+          <li>Browse assessment history</li>
+        </ul>
+      </div>
+
+      <div>
+        <button class="retry-button" onclick="checkConnection()">🔄 Check Connection</button>
+        <button class="cache-button" onclick="goToApp()">📱 Continue Offline</button>
+      </div>
+
+      <div class="tips">
+        <h4>💡 Tips for offline use:</h4>
+        <p>• Your responses will be saved locally and synced when you're back online</p>
+        <p>• Some features like result sharing require an internet connection</p>
+        <p>• The app will automatically retry sending data when connection is restored</p>
+      </div>
+    </div>
+
+    <script>
+      // Check connection status
+      function updateConnectionStatus() {
+        const statusElement = document.getElementById('connection-status');
+        const retryButton = document.querySelector('.retry-button');
+
+        if (navigator.onLine) {
+          statusElement.textContent = '🟢 Connection restored! You can now access all features.';
+          statusElement.className = 'connection-status online';
+          retryButton.textContent = '🏠 Go to App';
+          retryButton.onclick = goToApp;
+        } else {
+          statusElement.textContent = '🔴 No internet connection detected';
+          statusElement.className = 'connection-status offline';
+          retryButton.textContent = '🔄 Check Connection';
+          retryButton.onclick = checkConnection;
+        }
+      }
+
+      function checkConnection() {
+        const button = document.querySelector('.retry-button');
+        const originalText = button.textContent;
+
+        button.textContent = '⏳ Checking...';
+        button.disabled = true;
+
+        // Simulate checking with a small delay
+        setTimeout(() => {
+          updateConnectionStatus();
+          button.disabled = false;
+
+          if (navigator.onLine) {
+            // Try to fetch a small resource to verify real connectivity
+            fetch('/favicon.ico?t=' + Date.now(), {
+              method: 'HEAD',
+              cache: 'no-store',
+            })
+              .then(() => {
+                console.log('✅ Connection verified');
+                // Could redirect to app here
+              })
+              .catch(() => {
+                console.log('❌ Connection check failed');
+                updateConnectionStatus();
+              });
+          }
+        }, 1000);
+      }
+
+      function goToApp() {
+        // Try to navigate to the main app
+        if ('serviceWorker' in navigator) {
+          // If service worker is available, the app should work offline
+          window.location.href = '/';
+        } else {
+          // Fallback for browsers without service worker support
+          alert('Offline features require a modern browser with service worker support.');
+        }
+      }
+
+      // Listen for online/offline events
+      window.addEventListener('online', updateConnectionStatus);
+      window.addEventListener('offline', updateConnectionStatus);
+
+      // Initial status check
+      updateConnectionStatus();
+
+      // Auto-redirect when connection is restored
+      window.addEventListener('online', () => {
+        setTimeout(() => {
+          if (navigator.onLine) {
+            goToApp();
+          }
+        }, 2000); // Wait 2 seconds to ensure stable connection
+      });
+
+      // Service worker registration check
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(() => {
+          console.log('✅ Service worker is ready for offline functionality');
+        });
+      }
+
+      // Add some visual feedback
+      document.addEventListener('DOMContentLoaded', () => {
+        // Add fade-in animation
+        document.querySelector('.offline-container').style.opacity = '0';
+        document.querySelector('.offline-container').style.transform = 'translateY(20px)';
+
+        setTimeout(() => {
+          document.querySelector('.offline-container').style.transition = 'all 0.5s ease';
+          document.querySelector('.offline-container').style.opacity = '1';
+          document.querySelector('.offline-container').style.transform = 'translateY(0)';
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
