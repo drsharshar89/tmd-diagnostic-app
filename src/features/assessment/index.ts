@@ -16,7 +16,22 @@ export { assessmentStore } from './stores/assessmentStore';
 
 // Utils
 export {
+  calculateAssessmentRisk,
   validateQuickAssessment,
   validateComprehensiveAssessment,
   getAssessmentCompleteness,
 } from './utils/validation';
+
+// Assessment Feature Barrel Exports
+
+// Types - Re-export from shared types for compatibility
+export type { 
+  QuickAssessmentAnswers, 
+  ComprehensiveAnswers, 
+  AssessmentType,
+  RiskLevel,
+  AssessmentResult 
+} from '@/shared/types';
+
+// Config
+export { default as quickAssessmentConfig } from './config/quick-assessment.json';

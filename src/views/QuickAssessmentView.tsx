@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 import { Language, getTranslation } from '../i18n';
-import { QuickAssessmentAnswers } from '../types';
+import { QuickAssessmentAnswers } from '@/shared/types';
 import { useQuickAssessment } from '../features/assessment/hooks/useQuickAssessment';
 
 interface QuickAssessmentViewProps {

@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { QuickAssessmentAnswers, RiskLevel, AssessmentResult } from '@/types';
+import { QuickAssessmentAnswers, RiskLevel, AssessmentResult } from '@/shared/types';
 import assessmentConfig from '../config/quick-assessment.json';
 
 export interface QuestionData {

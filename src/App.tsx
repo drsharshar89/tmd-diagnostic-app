@@ -8,7 +8,7 @@ import {
   ComprehensiveAnswers,
   AssessmentType,
   Theme,
-} from './shared/types';
+} from '@/shared/types';
 import { getSystemTheme } from './shared/utils';
 import { securityService } from './services/SecurityService';
 

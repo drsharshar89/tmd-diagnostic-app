@@ -20,7 +20,7 @@ export interface ComprehensiveAnswers {
   q4: boolean | null; // Temple pain
   q5: boolean | null; // Ear pain
   q6: boolean | null; // Morning jaw stiffness
-  q7: number | null; // Pain severity (0-10)
+  q7: number | null; // Pain severity (0-4 DC/TMD standard)
 
   // Joint Sounds (Q8-Q11)
   q8: boolean | null; // Clicking sounds
@@ -45,7 +45,7 @@ export interface ComprehensiveAnswers {
   // History and Triggers (Q22-Q26)
   q22: boolean | null; // Recent dental work
   q23: boolean | null; // Trauma to jaw/face
-  q24: number | null; // Stress levels (1-10)
+  q24: number | null; // Stress levels (0-4 DC/TMD standard)
   q25: string | null; // Sleep bruxism
   q26: boolean | null; // Daytime clenching
 }
@@ -191,7 +191,7 @@ export interface AnalyticsEvent {
 // Medical Data Types
 export interface PainMapping {
   region: string;
-  intensity: number; // 0-10
+  intensity: number; // 0-4 DC/TMD standard
   frequency: 'constant' | 'intermittent' | 'occasional';
   triggers: string[];
   relievers: string[];

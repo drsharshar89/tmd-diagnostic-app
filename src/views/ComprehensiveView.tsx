@@ -108,7 +108,7 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
     q4: null, // Temple pain
     q5: null, // Ear pain
     q6: null, // Morning jaw stiffness
-    q7: null, // Pain severity (0-10)
+          q7: null, // Pain severity (0-4 DC/TMD standard)
 
     // Joint Sounds
     q8: null, // Clicking sounds
@@ -173,7 +173,7 @@ const ComprehensiveView: React.FC<ComprehensiveViewProps> = memo(({ lang, onComp
         category: 'Pain Assessment',
       },
       {
-        text: 'On a scale of 0-10, what is your average jaw pain level over the past week? (0 = no pain, 10 = worst pain imaginable)',
+        text: 'On a scale of 0-4, what is your average jaw pain level over the past week? (0 = no pain, 4 = very severe pain) - DC/TMD standard',
         type: 'scale',
         category: 'Pain Assessment',
       },

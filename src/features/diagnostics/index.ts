@@ -50,3 +50,29 @@ export const createLegacyDiagnosticEngine = (config?: any) => {
   const { TMDDiagnosticEngine } = require('./engine/TMDDiagnosticEngine');
   return new TMDDiagnosticEngine(config);
 };
+
+// Diagnostics Feature Barrel Exports
+
+// Main Engine
+export { TMDDiagnosticEngine } from './engine/TMDDiagnosticEngine';
+export { MedicalProtocolEngine } from './engine/MedicalProtocolEngine';
+
+// Supporting Engines
+export { ProtocolValidator } from './engine/ProtocolValidator';
+export { RiskCalculator } from './engine/RiskCalculator';
+export { EnhancedRiskCalculator } from './engine/EnhancedRiskCalculator';
+export { ICD10Mapper } from './engine/ICD10Mapper';
+
+// Types
+export type { 
+  DiagnosticProcessingResult,
+  ProtocolValidationResult,
+  DetailedRiskResult,
+  ICD10MappingResult 
+} from './engine/TMDDiagnosticEngine';
+
+// Factory function for TMD Engine
+export const createTMDEngine = (config?: any) => {
+  const { TMDDiagnosticEngine } = require('./engine/TMDDiagnosticEngine');
+  return new TMDDiagnosticEngine(config);
+};

@@ -40,3 +40,17 @@ export type {
 } from './diagnosis';
 
 export { DiagnosisFactory, DiagnosisDomainService } from './diagnosis';
+
+// Entities Barrel Exports - Domain-Driven Design
+
+// Assessment Domain
+export * from './assessment';
+export * from './assessment/model/Assessment';
+
+// Diagnosis Domain
+export * from './diagnosis';
+export * from './diagnosis/model/Diagnosis';
+
+// Patient Domain
+export * from './patient';
+export * from './patient/model/Patient';

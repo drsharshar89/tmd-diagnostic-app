@@ -103,7 +103,7 @@ export class TMDDiagnosticEngine {
       }
     });
 
-    // Q7: Pain severity scale (direct score 0-10)
+    // Q7: Pain severity scale (0-4 DC/TMD standard)
     if (answers.q7 !== null) {
       maxScore += 10;
       score += answers.q7;

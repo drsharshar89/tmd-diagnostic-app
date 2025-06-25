@@ -416,10 +416,10 @@ export class MedicalProtocolEngine {
       }
     });
 
-    // Q7: Pain severity scale (0-10, but normalize to 0-4 per DC/TMD)
-    if (answers.q7 !== null) {
-      maxScore += 4; // DC/TMD uses 0-4 scale
-      const normalizedPainLevel = Math.min(4, Math.round((answers.q7 / 10) * 4));
+          // Q7: Pain severity scale (0-4 per DC/TMD standard)
+      if (answers.q7 !== null) {
+        maxScore += 4; // DC/TMD uses 0-4 scale
+        const normalizedPainLevel = Math.min(4, Math.max(0, answers.q7)); // Already 0-4 scale
       rawScore += normalizedPainLevel;
 
       if (normalizedPainLevel > 0) {
