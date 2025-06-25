@@ -35,34 +35,65 @@ describe('Risk Calculation Utilities', () => {
   describe('calculateQuickAssessmentRisk', () => {
     test('should return high risk for severe symptoms', () => {
       const answers: QuickAssessmentAnswers = {
-        description:
-          'I have severe pain and my jaw is locked, I cannot open my mouth and the pain is excruciating',
+        q1: true, // Jaw pain
+        q2: true, // Pain worsens with movement
+        q3: true, // Joint sounds
+        q4: true, // Jaw locking
+        q5: true, // Referred symptoms
+        q6: null, // History of trauma
+        q7: true  // Stiffness or fatigue
       };
       expect(calculateQuickAssessmentRisk(answers)).toBe('high');
     });
 
-    test('should return high risk for long descriptions', () => {
-      const longDescription = 'a'.repeat(201);
-      const answers: QuickAssessmentAnswers = { description: longDescription };
+    test('should return high risk for multiple positive answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: true,
+        q2: true,
+        q3: true,
+        q4: true,
+        q5: false,
+        q6: false,
+        q7: true
+      };
       expect(calculateQuickAssessmentRisk(answers)).toBe('high');
     });
 
     test('should return moderate risk for moderate symptoms', () => {
       const answers: QuickAssessmentAnswers = {
-        description: 'I have painful jaw sometimes in the morning',
+        q1: true,  // Jaw pain
+        q2: false, // Pain doesn't worsen
+        q3: false, // No joint sounds
+        q4: false, // No jaw locking
+        q5: false, // No referred symptoms
+        q6: false, // No history
+        q7: true   // Morning stiffness
       };
       expect(calculateQuickAssessmentRisk(answers)).toBe('moderate');
     });
 
-    test('should return moderate risk for medium descriptions', () => {
-      const mediumDescription = 'a'.repeat(150);
-      const answers: QuickAssessmentAnswers = { description: mediumDescription };
+    test('should return moderate risk for some positive answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: true,
+        q2: true,
+        q3: false,
+        q4: false,
+        q5: false,
+        q6: false,
+        q7: false
+      };
       expect(calculateQuickAssessmentRisk(answers)).toBe('moderate');
     });
 
     test('should return low risk for mild symptoms', () => {
       const answers: QuickAssessmentAnswers = {
-        description: 'slight discomfort',
+        q1: true,  // Mild pain
+        q2: false, // No worsening
+        q3: false, // No sounds
+        q4: false, // No locking
+        q5: false, // No referred symptoms
+        q6: false, // No history
+        q7: false  // No stiffness
       };
       expect(calculateQuickAssessmentRisk(answers)).toBe('low');
     });
