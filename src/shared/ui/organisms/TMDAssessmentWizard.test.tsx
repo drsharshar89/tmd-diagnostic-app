@@ -1,63 +1,63 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import { TMDAssessmentWizard, type TMDAssessmentProps } from './TMDAssessmentWizard';
 
 // Mock dependencies
-vi.mock('react-i18next', () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
   }),
 }));
 
-vi.mock('@/shared/hooks', () => ({
+jest.mock('@/shared/hooks', () => ({
   useDebounce: (value: any) => value,
 }));
 
-vi.mock('@/hooks/usePerformance', () => ({
+jest.mock('@/hooks/usePerformance', () => ({
   usePerformance: () => ({
-    trackPerformance: vi.fn(),
-    measureTime: vi.fn(() => 100),
+    trackPerformance: jest.fn(),
+    measureTime: jest.fn(() => 100),
   }),
 }));
 
-vi.mock('@/hooks/useAccessibility', () => ({
+jest.mock('@/hooks/useAccessibility', () => ({
   useAccessibility: () => ({
-    announceToScreenReader: vi.fn(),
-    focusElement: vi.fn(),
+    announceToScreenReader: jest.fn(),
+    focusElement: jest.fn(),
   }),
 }));
 
-vi.mock('@/services/SecurityService', () => ({
+jest.mock('@/services/SecurityService', () => ({
   SecurityService: {
-    encryptSensitiveData: vi.fn((data) => Promise.resolve(data)),
+    encryptSensitiveData: jest.fn((data: any) => Promise.resolve(data)),
   },
 }));
 
-vi.mock('@/services/ErrorLoggingService', () => ({
+jest.mock('@/services/ErrorLoggingService', () => ({
   ErrorLoggingService: {
-    logError: vi.fn(),
+    logError: jest.fn(),
   },
   ErrorSeverity: { MEDIUM: 'medium', HIGH: 'high' },
   ErrorCategory: { STORAGE: 'storage', ASSESSMENT: 'assessment' },
 }));
 
-vi.mock('@/services/AnalyticsService', () => ({
+jest.mock('@/services/AnalyticsService', () => ({
   AnalyticsService: {
-    trackEvent: vi.fn(),
+    trackEvent: jest.fn(),
   },
 }));
 
 describe('TMDAssessmentWizard', () => {
   const defaultProps: TMDAssessmentProps = {
-    onComplete: vi.fn(),
-    onSave: vi.fn(),
-    onError: vi.fn(),
+    onComplete: jest.fn(),
+    onSave: jest.fn(),
+    onError: jest.fn(),
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    jest.clearAllMocks();
   });
 
   it('should render the assessment wizard', () => {

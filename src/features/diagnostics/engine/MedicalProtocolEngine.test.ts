@@ -154,18 +154,33 @@ const HIGH_RISK_PATIENT: ComprehensiveAnswers = {
 
 // Quick Assessment Test Data
 const QUICK_LOW_RISK: QuickAssessmentAnswers = {
-  description:
-    "I have mild jaw discomfort occasionally when I chew hard foods. It's not severe and doesn't happen often.",
+  q1: true,  // Mild jaw discomfort
+  q2: true,  // Occasionally when chewing hard foods
+  q3: false, // No sounds
+  q4: false, // No locking
+  q5: false, // No referred symptoms
+  q6: false, // No history
+  q7: false  // Not severe
 };
 
 const QUICK_MODERATE_RISK: QuickAssessmentAnswers = {
-  description:
-    "I experience frequent jaw pain and clicking sounds, especially when I'm stressed. Sometimes I have difficulty opening my mouth wide and chewing becomes uncomfortable.",
+  q1: true,  // Frequent jaw pain
+  q2: true,  // Pain when stressed
+  q3: true,  // Clicking sounds
+  q4: false, // No locking mentioned
+  q5: false, // No referred pain
+  q6: false, // No history mentioned
+  q7: true   // Difficulty opening mouth/chewing
 };
 
 const QUICK_HIGH_RISK: QuickAssessmentAnswers = {
-  description:
-    'I have severe constant jaw pain that is unbearable. My jaw frequently locks and gets stuck, making it impossible to eat properly. The pain is intense and affects my daily life significantly.',
+  q1: true,  // Severe constant jaw pain
+  q2: true,  // Unbearable pain
+  q3: false, // No sounds mentioned
+  q4: true,  // Jaw frequently locks
+  q5: true,  // Pain affects daily life
+  q6: false, // No history mentioned
+  q7: true   // Intense, impossible to eat
 };
 
 // =====================================================
@@ -402,12 +417,28 @@ describe('MedicalProtocolEngine', () => {
 
     it('should reject invalid quick assessment descriptions', () => {
       expect(() => {
-        engine.processQuickAssessment({ description: '' });
-      }).toThrow('Description is required for quick assessment');
+        engine.processQuickAssessment({
+          q1: null,
+          q2: null,
+          q3: null,
+          q4: null,
+          q5: null,
+          q6: null,
+          q7: null
+        });
+      }).toThrow('Insufficient responses for quick assessment');
 
       expect(() => {
-        engine.processQuickAssessment({ description: 'short' });
-      }).toThrow('Description must be at least 10 characters long');
+        engine.processQuickAssessment({
+          q1: true,
+          q2: null,
+          q3: null,
+          q4: null,
+          q5: null,
+          q6: null,
+          q7: null
+        });
+      }).toThrow('Insufficient responses for quick assessment');
     });
   });
 

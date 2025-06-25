@@ -56,34 +56,19 @@ export const createLegacyDiagnosticEngine = (config?: any) => {
 // Main Engines
 export { TMDDiagnosticEngine } from './engine/TMDDiagnosticEngine';
 export { MedicalProtocolEngine } from './engine/MedicalProtocolEngine';
-
-// Supporting Engines
 export { ProtocolValidator } from './engine/ProtocolValidator';
 export { RiskCalculator } from './engine/RiskCalculator';
 export { EnhancedRiskCalculator } from './engine/EnhancedRiskCalculator';
 export { ICD10Mapper } from './engine/ICD10Mapper';
 
-// Types
-export type { 
-  DiagnosticProcessingResult 
-} from './engine/TMDDiagnosticEngine';
+// Types from TMDDiagnosticEngine
+export type { DiagnosticProcessingResult } from './engine/TMDDiagnosticEngine';
 
-export type {
-  ProtocolValidationResult
-} from './engine/ProtocolValidator';
-
-export type {
-  DetailedRiskResult
-} from './engine/RiskCalculator';
-
-export type {
-  ICD10MappingResult
-} from './engine/ICD10Mapper';
-
-export type {
-  EnhancedRiskResult
-} from './engine/EnhancedRiskCalculator';
-
+// Types from other engines
+export type { ProtocolValidationResult } from './engine/ProtocolValidator';
+export type { DetailedRiskResult } from './engine/RiskCalculator';
+export type { ICD10MappingResult } from './engine/ICD10Mapper';
+export type { EnhancedRiskResult } from './engine/EnhancedRiskCalculator';
 export type {
   MedicalScoreResult,
   CategoryScore,
@@ -95,8 +80,15 @@ export type {
 export { createMedicalProtocolEngine } from './engine/MedicalProtocolEngine';
 export { createEnhancedRiskCalculator } from './engine/EnhancedRiskCalculator';
 
+// Re-export specific functions from MedicalProtocolEngine
+export {
+  processComprehensiveAssessment,
+  processQuickAssessment,
+  calculateRiskLevel
+} from './engine/MedicalProtocolEngine';
+
 // Main factory function
-export const createTMDEngine = (config?: any) => {
+export const createDiagnosticEngine = (config?: any) => {
   const { TMDDiagnosticEngine } = require('./engine/TMDDiagnosticEngine');
   return new TMDDiagnosticEngine(config);
 };

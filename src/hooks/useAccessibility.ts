@@ -349,6 +349,33 @@ export const useAccessibility = (config: Partial<AccessibilityConfig> = {}) => {
     checkTabOrder,
   };
 
+  // Add missing methods
+  const announceToScreenReader = (message: string): void => {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    announcement.style.width = '1px';
+    announcement.style.height = '1px';
+    announcement.style.overflow = 'hidden';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    // Remove after announcement
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  };
+
+  const focusElement = (element: HTMLElement | null): void => {
+    if (element) {
+      element.focus();
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   return {
     isScreenReaderActive,
     keyboardNavigation,
@@ -357,6 +384,8 @@ export const useAccessibility = (config: Partial<AccessibilityConfig> = {}) => {
     detectScreenReader,
     getFocusableElements,
     checkColorContrast,
+    announceToScreenReader,
+    focusElement
   };
 };
 

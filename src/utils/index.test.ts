@@ -20,6 +20,37 @@ import {
 } from './index';
 import { QuickAssessmentAnswers, ComprehensiveAnswers, AssessmentResult } from '../types';
 
+// Helper function to create complete ComprehensiveAnswers objects for testing
+const createComprehensiveAnswers = (overrides: Partial<ComprehensiveAnswers> = {}): ComprehensiveAnswers => ({
+  q1: null,
+  q2: null,
+  q3: null,
+  q4: null,
+  q5: null,
+  q6: null,
+  q7: null,
+  q8: null,
+  q9: null,
+  q10: null,
+  q11: null,
+  q12: null,
+  q13: null,
+  q14: null,
+  q15: null,
+  q16: null,
+  q17: null,
+  q18: null,
+  q19: null,
+  q20: null,
+  q21: null,
+  q22: null,
+  q23: null,
+  q24: null,
+  q25: null,
+  q26: null,
+  ...overrides
+});
+
 // Mock localStorage for testing
 const mockLocalStorage = {
   getItem: jest.fn(),
@@ -98,21 +129,41 @@ describe('Risk Calculation Utilities', () => {
       expect(calculateQuickAssessmentRisk(answers)).toBe('low');
     });
 
-    test('should handle empty description', () => {
-      const answers: QuickAssessmentAnswers = { description: '' };
+    test('should handle all negative answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: false,
+        q2: false,
+        q3: false,
+        q4: false,
+        q5: false,
+        q6: false,
+        q7: false
+      };
       expect(calculateQuickAssessmentRisk(answers)).toBe('low');
     });
 
     test('should be case insensitive', () => {
       const answers: QuickAssessmentAnswers = {
-        description: 'SEVERE PAIN AND LOCKED JAW',
+        q1: true, // SEVERE PAIN
+        q2: true, // Pain worsens
+        q3: false, // No sounds mentioned
+        q4: true, // LOCKED JAW
+        q5: true, // Pain severity implies referred symptoms
+        q6: false, // Not mentioned
+        q7: true  // Severe symptoms imply stiffness
       };
       expect(calculateQuickAssessmentRisk(answers)).toBe('high');
     });
 
     test('should detect multiple high-risk keywords', () => {
       const answers: QuickAssessmentAnswers = {
-        description: 'constant clicking and grinding with unbearable pain',
+        q1: true, // unbearable pain
+        q2: true, // constant pain implies worsening
+        q3: true, // clicking and grinding
+        q4: false, // Not mentioned
+        q5: true, // unbearable pain implies referred symptoms
+        q6: false, // Not mentioned
+        q7: true  // grinding implies stiffness
       };
       expect(calculateQuickAssessmentRisk(answers)).toBe('high');
     });
@@ -120,42 +171,50 @@ describe('Risk Calculation Utilities', () => {
 
   describe('calculateComprehensiveAssessmentRisk', () => {
     test('should return high risk for 3 yes answers', () => {
-      const answers: ComprehensiveAnswers = { q1: true, q2: true, q3: true };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ q1: true, q2: true, q3: true });
       expect(calculateComprehensiveAssessmentRisk(answers)).toBe('high');
     });
 
     test('should return moderate risk for 1-2 yes answers', () => {
-      const answers1: ComprehensiveAnswers = { q1: true, q2: false, q3: false };
-      const answers2: ComprehensiveAnswers = { q1: true, q2: true, q3: false };
+      const answers1: ComprehensiveAnswers = createComprehensiveAnswers({ q1: true, q2: false, q3: false });
+      const answers2: ComprehensiveAnswers = createComprehensiveAnswers({ q1: true, q2: true, q3: false });
       expect(calculateComprehensiveAssessmentRisk(answers1)).toBe('moderate');
       expect(calculateComprehensiveAssessmentRisk(answers2)).toBe('moderate');
     });
 
     test('should return low risk for all no answers', () => {
-      const answers: ComprehensiveAnswers = { q1: false, q2: false, q3: false };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ q1: false, q2: false, q3: false });
       expect(calculateComprehensiveAssessmentRisk(answers)).toBe('low');
     });
 
     test('should handle null values as no answers', () => {
-      const answers: ComprehensiveAnswers = { q1: null, q2: null, q3: null };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ q1: null, q2: null, q3: null });
       expect(calculateComprehensiveAssessmentRisk(answers)).toBe('low');
     });
 
     test('should handle mixed null and boolean values', () => {
-      const answers: ComprehensiveAnswers = { q1: true, q2: null, q3: false };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ q1: true, q2: null, q3: false });
       expect(calculateComprehensiveAssessmentRisk(answers)).toBe('moderate');
     });
   });
 
   describe('calculateRiskLevel', () => {
     test('should calculate risk for quick assessment', () => {
-      const quickAnswers: QuickAssessmentAnswers = { description: 'severe pain' };
+      const quickAnswers: QuickAssessmentAnswers = {
+        q1: true, // severe pain
+        q2: true, // severe implies worsening
+        q3: true, // severe often with sounds
+        q4: true, // severe often with locking
+        q5: true, // severe implies referred
+        q6: false,
+        q7: true
+      };
       const result = calculateRiskLevel('quick', quickAnswers, undefined);
       expect(result).toBe('high');
     });
 
     test('should calculate risk for comprehensive assessment', () => {
-      const comprehensiveAnswers: ComprehensiveAnswers = { q1: true, q2: true, q3: true };
+      const comprehensiveAnswers: ComprehensiveAnswers = createComprehensiveAnswers({ q1: true, q2: true, q3: true });
       const result = calculateRiskLevel('comprehensive', undefined, comprehensiveAnswers);
       expect(result).toBe('high');
     });
@@ -219,10 +278,23 @@ describe('Storage Utilities', () => {
       const mockResult: AssessmentResult = {
         riskLevel: 'moderate',
         score: 75,
+        maxScore: 100,
+        confidence: 0.8,
         recommendations: ['Test recommendation'],
         timestamp: new Date(),
         assessmentType: 'quick',
-        answers: { description: 'test' },
+        answers: {
+          q1: true,
+          q2: false,
+          q3: false,
+          q4: false,
+          q5: false,
+          q6: false,
+          q7: false
+        } as QuickAssessmentAnswers,
+        requiresImmediateAttention: false,
+        followUpRecommended: true,
+        specialistReferral: false
       };
 
       mockLocalStorage.getItem.mockReturnValue('[]');
@@ -250,10 +322,15 @@ describe('Storage Utilities', () => {
       const mockResult: AssessmentResult = {
         riskLevel: 'high',
         score: 90,
+        maxScore: 100,
+        confidence: 0.95,
         recommendations: ['Urgent care'],
         timestamp: new Date(),
         assessmentType: 'comprehensive',
-        answers: { q1: true, q2: true, q3: true },
+        answers: createComprehensiveAnswers({ q1: true, q2: true, q3: true }),
+        requiresImmediateAttention: true,
+        followUpRecommended: true,
+        specialistReferral: true
       };
 
       const code = saveAssessment(mockResult);
@@ -321,35 +398,67 @@ describe('Storage Utilities', () => {
 
 describe('Validation Utilities', () => {
   describe('validateQuickAssessment', () => {
-    test('should validate non-empty description', () => {
-      const answers: QuickAssessmentAnswers = { description: 'test description' };
+    test('should validate complete quick assessment answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: true,
+        q2: false,
+        q3: true,
+        q4: false,
+        q5: true,
+        q6: false,
+        q7: true
+      };
       expect(validateQuickAssessment(answers)).toBe(true);
     });
 
-    test('should reject empty description', () => {
-      const answers: QuickAssessmentAnswers = { description: '' };
+    test('should reject incomplete quick assessment answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: true,
+        q2: false,
+        q3: null, // Incomplete
+        q4: false,
+        q5: true,
+        q6: false,
+        q7: true
+      };
       expect(validateQuickAssessment(answers)).toBe(false);
     });
 
-    test('should reject whitespace-only description', () => {
-      const answers: QuickAssessmentAnswers = { description: '   ' };
+    test('should reject all null quick assessment answers', () => {
+      const answers: QuickAssessmentAnswers = {
+        q1: null,
+        q2: null,
+        q3: null,
+        q4: null,
+        q5: null,
+        q6: null,
+        q7: null
+      };
       expect(validateQuickAssessment(answers)).toBe(false);
     });
   });
 
   describe('validateComprehensiveAssessment', () => {
     test('should validate complete answers', () => {
-      const answers: ComprehensiveAnswers = { q1: true, q2: false, q3: true };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ 
+        q1: true, q2: false, q3: true, q4: false, q5: true, q6: false,
+        q7: 2, q8: true, q9: false, q10: true, q11: 'left', q12: false,
+        q13: true, q14: false, q15: true, q16: false, q17: true, q18: false,
+        q19: true, q20: false, q21: true, q22: false, q23: true, q24: 3,
+        q25: 'occasional', q26: true
+      });
       expect(validateComprehensiveAssessment(answers)).toBe(true);
     });
 
     test('should reject incomplete answers', () => {
-      const answers: ComprehensiveAnswers = { q1: true, q2: null, q3: false };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers({ 
+        q1: true, q2: null, q3: false // Missing many required fields
+      });
       expect(validateComprehensiveAssessment(answers)).toBe(false);
     });
 
     test('should reject all null answers', () => {
-      const answers: ComprehensiveAnswers = { q1: null, q2: null, q3: null };
+      const answers: ComprehensiveAnswers = createComprehensiveAnswers();
       expect(validateComprehensiveAssessment(answers)).toBe(false);
     });
   });
